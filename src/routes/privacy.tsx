@@ -8,12 +8,12 @@ export const Route = createFileRoute("/privacy")({
       {
         name: "description",
         content:
-          "How QuickScan PDF handles your data: scans are processed on your device, no accounts, no tracking, no ads.",
+          "QuickScan PDF works entirely on your device. Your scans and PDFs never reach us — we have no access to them.",
       },
-      { property: "og:title", content: "Privacy Policy — QuickScan PDF" },
       {
         property: "og:description",
-        content: "Scans are processed on your device. No accounts, no tracking, no ads.",
+        content:
+          "QuickScan PDF works entirely on your device. Your scans and PDFs never reach us — we have no access to them.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -45,22 +45,29 @@ function PrivacyPage() {
 
         <p className="mt-8 leading-relaxed text-muted-foreground">
           QuickScan PDF is built to work entirely on your phone. This page explains, in plain
-          language, what happens to the photos you scan and the documents you create.
+          language, what happens to the photos you scan, the documents you create, and the ads you
+          may see in the app.
         </p>
 
         <LegalSection title="The short version">
           <p>
-            Your photos never leave your device unless you choose to share a finished PDF. We don't
-            run accounts, we don't show ads, and we don't sell data — there isn't any data to sell.
+            QuickScan PDF is completely free. Everything you scan is processed and stored on your
+            own device — we have no servers that hold your documents, and we never see your scans
+            or PDFs. The app is supported by ads, which is what keeps it free for everyone.
           </p>
         </LegalSection>
 
-        <LegalSection title="Photos and scans">
+        <LegalSection title="Your scans stay on your device">
           <p>
-            When you take a picture inside the app, edge detection and image cleanup happen
-            locally on your phone. The image is not uploaded to us or to any third party during
-            this process. Finished PDFs are stored in the app's documents folder and stay there
+            When you take a picture inside the app, edge detection, image cleanup, and PDF
+            creation all happen locally on your phone. Nothing is uploaded to us or to any cloud
+            service — we don't have access to your documents and there is no way for us to view
+            them, even if we wanted to. Finished PDFs are saved on your device and stay there
             until you delete them or share them yourself.
+          </p>
+          <p>
+            We do not provide cloud storage, backup, or sync. If you delete the app, your
+            documents go with it, so keep backups of anything important.
           </p>
         </LegalSection>
 
@@ -72,12 +79,28 @@ function PrivacyPage() {
           </p>
         </LegalSection>
 
+        <LegalSection title="Ads">
+          <p>
+            The app displays ads to cover the cost of keeping it free. Ads are served by
+            third-party advertising networks (such as Google AdMob), and those networks act as
+            their own data controllers. Depending on your device settings and the consents you
+            give, ad networks may use device identifiers to show relevant ads and measure
+            performance.
+          </p>
+          <p>
+            Ad content is delivered by the ad network, not by us — we don't choose the individual
+            ads you see. You can limit ad personalization in your phone's settings (for example,
+            "Reset advertising ID" on Android or "Limit Ad Tracking" options on iOS), and some ads
+            may still appear, just less tailored to you.
+          </p>
+        </LegalSection>
+
         <LegalSection title="What we don't collect">
           <ul className="list-disc space-y-2 pl-5">
             <li>No account information — there is no sign-up and no login.</li>
-            <li>No advertising or analytics identifiers.</li>
+            <li>No copies of your scanned documents — we have no access to them at all.</li>
             <li>No location data, contacts, or browsing history.</li>
-            <li>No copies of your scanned documents on our servers.</li>
+            <li>No cloud storage of your files, ever.</li>
           </ul>
         </LegalSection>
 
@@ -92,8 +115,8 @@ function PrivacyPage() {
         <LegalSection title="Children">
           <p>
             QuickScan PDF does not knowingly collect personal information from anyone, including
-            children under 13. Because the app processes everything on-device, no personal data is
-            collected from any user of any age.
+            children under 13. Because document processing happens entirely on-device, the app
+            itself collects no personal data from any user of any age.
           </p>
         </LegalSection>
 
@@ -107,8 +130,14 @@ function PrivacyPage() {
 
         <LegalSection title="Contact">
           <p>
-            Questions about this policy? Open the app and go to Settings → Help, or reach out
-            through the store listing for your platform.
+            Questions about this policy? Mail us at{" "}
+            <a
+              href="mailto:obaidd.dev@gmail.com"
+              className="text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:decoration-primary"
+            >
+              obaidd.dev@gmail.com
+            </a>{" "}
+            and we'll get back to you.
           </p>
         </LegalSection>
       </main>
