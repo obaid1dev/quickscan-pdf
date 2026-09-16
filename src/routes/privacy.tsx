@@ -10,11 +10,13 @@ export const Route = createFileRoute("/privacy")({
         content:
           "QuickScan PDF works entirely on your device. Your scans and PDFs never reach us — we have no access to them.",
       },
-      { property: "og:title", content: "Privacy Policy — QuickScan PDF" },
       {
-        name: "twitter:card",
-        content: "summary_large_image",
+        property: "og:description",
+        content:
+          "QuickScan PDF works entirely on your device. Your scans and PDFs never reach us — we have no access to them.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PrivacyPage,
