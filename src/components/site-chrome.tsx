@@ -25,7 +25,7 @@ export function SiteHeader() {
             className="rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Get the app
-          </Link>
+          </a>
         </nav>
       </div>
     </header>
