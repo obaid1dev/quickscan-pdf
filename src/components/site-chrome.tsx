@@ -20,8 +20,8 @@ export function SiteHeader() {
           <Link to="/privacy" className="hidden transition-colors hover:text-foreground sm:inline">
             Privacy
           </Link>
-          <Link
-            to="/privacy"
+          <a
+            href="/#download"
             className="rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Get the app
