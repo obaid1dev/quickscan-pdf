@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Apple, Play, Check, FileText, Crop, SunMedium, Layers, Share2 } from "lucide-react";
+import { Play, Check, FileText, Crop, SunMedium, Layers, Share2 } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 
 export const Route = createFileRoute("/")({
@@ -45,7 +45,7 @@ function Index() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
                 </span>
-                Free on iPhone and Android
+                Free on Android
               </p>
               <h1 className="mt-5 max-w-xl font-display text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
                 Snap a photo.
@@ -59,18 +59,19 @@ function Index() {
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <a
-                  href="/#download"
+                  href="https://play.google.com/store/apps/details?id=com.obaid.dev.quickscanpdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 glow-soft"
                 >
-                  <Apple className="h-4 w-4" />
-                  Download for iOS
+                  <Play className="h-4 w-4" />
+                  Get it on Google Play
                 </a>
                 <a
                   href="/#download"
                   className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-7 py-3.5 text-sm font-semibold text-foreground transition hover:bg-accent"
                 >
-                  <Play className="h-4 w-4" />
-                  Get it on Android
+                  See how it works
                 </a>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">No account needed. No watermarks.</p>
@@ -289,21 +290,16 @@ function Index() {
               </p>
               <div className="relative mt-9 flex flex-wrap items-center justify-center gap-4">
                 <a
-                  href="/#download"
+                  href="https://play.google.com/store/apps/details?id=com.obaid.dev.quickscanpdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 glow-soft"
                 >
-                  <Apple className="h-4 w-4" />
-                  App Store
-                </a>
-                <a
-                  href="/#download"
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-2 px-7 py-3.5 text-sm font-semibold text-foreground transition hover:bg-accent"
-                >
                   <Play className="h-4 w-4" />
-                  Google Play
+                  Get it on Google Play
                 </a>
               </div>
-              <p className="relative mt-5 text-xs text-muted-foreground">iOS 15+ · Android 9+</p>
+              <p className="relative mt-5 text-xs text-muted-foreground">Android 9+</p>
             </div>
           </div>
         </section>
