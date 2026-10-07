@@ -47,9 +47,8 @@ function TermsPage() {
         <LegalSection title="Your license">
           <p>
             We grant you a personal, non-exclusive, non-transferable license to install and use
-            QuickScan PDF on devices you own or control, through the Apple App Store or Google
-            Play. You may not copy, resell, reverse engineer, or create derivative works from the
-            app itself.
+            QuickScan PDF on devices you own or control, through Google Play. You may not copy,
+            resell, reverse engineer, or create derivative works from the app itself.
           </p>
         </LegalSection>
 
@@ -97,8 +96,8 @@ function TermsPage() {
             The app works offline for scanning and exporting. Features that depend on your device
             (camera, storage, sharing) depend on your device working normally. Ads, where
             supported, require an internet connection; the rest of the app keeps working without
-            one. We aim to keep the app available on current versions of iOS and Android, and we
-            may drop support for very old operating versions over time.
+            one. We aim to keep the app available on current versions of Android, and we may drop
+            support for very old operating versions over time.
           </p>
         </LegalSection>
 
