@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "QuickScan PDF — Scan anything into a clean PDF" },
-      { name: "description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone. Free on iPhone and Android." },
+      { name: "description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone. Free on Android." },
       { property: "og:title", content: "QuickScan PDF — Scan anything into a clean PDF" },
       { property: "og:description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone." },
       { property: "og:type", content: "website" },
