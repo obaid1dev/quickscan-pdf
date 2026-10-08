@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Point your camera at any page and QuickScan PDF turns it into a tidy, share-ready document. Free on iPhone and Android.",
+          "Point your camera at any page and QuickScan PDF turns it into a tidy, share-ready document. Free on Android.",
       },
       { property: "og:title", content: "QuickScan PDF — Turn photos into clean PDFs" },
       {
