@@ -5,23 +5,28 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * QuickScan PDF design system — dark, soft, editorial.
- * Deep ink surfaces, one scanner-blue accent, warm grotesque display type.
- * All colors are oklch semantic tokens. Never hardcode colors in components.
+ * QuickScan PDF
+ * A paper-and-ink system for a pocket document scanner.
+ * Cool paper, blue-black ink, one copy-shop blue. Color belongs to the
+ * document itself: highlighter, stamp, pen. The chrome stays quiet.
  */
 
 @theme {
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-quint: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 3px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -30,7 +35,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary-glow: var(--primary-glow);
+  --color-primary-soft: var(--primary-soft);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -44,32 +49,52 @@
   --color-ring: var(--ring);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-line: var(--ink-line);
+  --color-line: var(--line);
+  --color-highlight: var(--highlight);
+  --color-stamp: var(--stamp);
+  --color-pen: var(--pen);
 }
 
 :root {
-  --radius: 1rem;
-  --background: oklch(0.155 0.018 258);
-  --foreground: oklch(0.94 0.008 250);
-  --card: oklch(0.19 0.022 258);
-  --card-foreground: oklch(0.94 0.008 250);
-  --popover: oklch(0.21 0.022 258);
-  --popover-foreground: oklch(0.94 0.008 250);
-  --primary: oklch(0.66 0.17 247);
-  --primary-foreground: oklch(0.14 0.02 258);
-  --primary-glow: oklch(0.78 0.12 220);
-  --secondary: oklch(0.23 0.024 258);
-  --secondary-foreground: oklch(0.93 0.008 250);
-  --muted: oklch(0.22 0.02 258);
-  --muted-foreground: oklch(0.71 0.02 254);
-  --accent: oklch(0.24 0.03 250);
-  --accent-foreground: oklch(0.95 0.01 250);
-  --destructive: oklch(0.62 0.2 25);
-  --destructive-foreground: oklch(0.96 0.01 250);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.66 0.17 247);
-  --surface: oklch(0.185 0.02 258);
-  --surface-2: oklch(0.225 0.024 257);
+  --radius: 10px;
+
+  --paper: #f0f1eb;
+  --ink: #121e25;
+  --ink-2: #17252c;
+  --ink-muted: #a6b0af;
+  --ink-line: rgba(240, 241, 235, 0.16);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #f7f7f3;
+  --card-foreground: var(--ink);
+  --popover: #f7f7f3;
+  --popover-foreground: var(--ink);
+  --primary: #2145d8;
+  --primary-foreground: #ffffff;
+  --primary-soft: #aebcf3;
+  --secondary: #e7e8e1;
+  --secondary-foreground: var(--ink);
+  --muted: #e7e8e1;
+  --muted-foreground: #5b676c;
+  --accent: #e5e7de;
+  --accent-foreground: var(--ink);
+  --destructive: #b94535;
+  --destructive-foreground: #ffffff;
+  --border: rgba(18, 30, 37, 0.14);
+  --line: rgba(18, 30, 37, 0.14);
+  --input: rgba(18, 30, 37, 0.18);
+  --ring: #2145d8;
+  --surface: #f7f7f3;
+  --surface-2: #e8eae3;
+  --highlight: #f2d56b;
+  --stamp: #b94535;
+  --pen: #2a4fc9;
 }
 
 @layer base {
@@ -77,75 +102,155 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   html,
   body {
-    overflow-x: clip;
+    overflow-x: hidden;
+  }
+
+  /* Hide scrollbars visually while keeping the page scrollable. */
+  html {
+    scrollbar-width: none; /* Firefox */
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-  }
-
-  /* Subtle film grain so large flat surfaces don't read as sterile. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    text-rendering: optimizeLegibility;
   }
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--color-primary) 40%, transparent);
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+
+  section[id] {
+    scroll-margin-top: 88px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-@utility glow-line {
-  box-shadow:
-    0 0 18px 3px color-mix(in oklab, var(--color-primary) 55%, transparent),
-    0 0 60px 12px color-mix(in oklab, var(--color-primary) 25%, transparent);
-}
-
-@utility glow-soft {
-  box-shadow: 0 0 60px -12px color-mix(in oklab, var(--color-primary) 40%, transparent);
-}
-
-@utility animate-scan {
-  animation: scan-sweep 3.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-@keyframes scan-sweep {
-  0%,
-  100% {
-    top: 18%;
+/* One orchestrated entrance. The rest of the page stays still. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
-  50% {
-    top: 78%;
-  }
-}
-
-@utility animate-float {
-  animation: float-soft 6s ease-in-out infinite;
-}
-
-@keyframes float-soft {
-  0%,
-  100% {
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-8px);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility rise {
+  opacity: 0;
+  animation: rise-in 620ms var(--ease-out-quint) both;
+}
+
+@utility rise-late {
+  opacity: 0;
+  animation: rise-in 720ms var(--ease-out-quint) 140ms both;
+}
+
+/* The hero comparison: a photo of a page on a desk, cleaned into a scan. */
+@utility scan-desk {
+  background:
+    radial-gradient(90% 70% at 24% 12%, rgba(255, 255, 255, 0.13), transparent 60%),
+    radial-gradient(100% 100% at 74% 96%, rgba(8, 14, 16, 0.55), transparent 68%),
+    #48514f;
+}
+
+@utility scan-bed {
+  background:
+    radial-gradient(100% 80% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 62%),
+    #e4e7e0;
+}
+
+@utility paper-shadow {
+  box-shadow:
+    0 1px 1px rgba(8, 14, 16, 0.12),
+    0 18px 36px -16px rgba(8, 14, 16, 0.5);
+}
+
+@utility paper-shadow-soft {
+  box-shadow:
+    0 1px 1px rgba(18, 30, 37, 0.06),
+    0 12px 28px -18px rgba(18, 30, 37, 0.4);
+}
+
+/* A highlighter stroke sits under the line of text, not across the whole box. */
+@utility marker {
+  background-image: linear-gradient(
+    180deg,
+    transparent 52%,
+    var(--color-highlight) 52%,
+    var(--color-highlight) 92%,
+    transparent 92%
+  );
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding-inline: 1px;
+}
+
+/* The comparison must show focus even though the range input is invisible. */
+@utility compare-focus {
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .rise-late {
+    animation: fade-in 200ms ease both;
+    transform: none;
   }
 }

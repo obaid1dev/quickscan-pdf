@@ -32,9 +32,9 @@ function TermsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      <main className="mx-auto max-w-2xl px-6 pb-24 pt-16">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Legal</p>
-        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-foreground">
+      <main className="mx-auto max-w-2xl px-6 pb-24 pt-14">
+        <p className="font-mono text-[11px] text-muted-foreground">Legal</p>
+        <h1 className="mt-3 font-display text-4xl font-semibold tracking-[-0.03em] text-foreground">
           Terms of use
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">Last updated: September 2026</p>
