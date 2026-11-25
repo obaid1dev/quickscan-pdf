@@ -19,6 +19,12 @@ export function SiteHeader() {
           className="hidden items-center gap-7 text-[13px] text-muted-foreground md:flex"
           aria-label="Primary"
         >
+          <Link
+            to="/tools"
+            className="rounded-sm text-foreground transition-colors duration-150 hover:text-primary"
+          >
+            Tools
+          </Link>
           {NAV.map((item) => (
             <a
               key={item.href}
@@ -64,6 +70,14 @@ export function SiteFooter() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/tools"
+                  className="rounded-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
+                >
+                  Tools
+                </Link>
+              </li>
             </ul>
           </nav>
 

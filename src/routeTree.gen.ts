@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppAdsDottxtRouteImport } from './routes/app-ads[.]txt'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ToolsRouteImport } from './routes/tools'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tools': typeof ToolsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tools': typeof ToolsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tools': typeof ToolsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app-ads.txt' | '/privacy' | '/terms'
+  fullPaths: '/' | '/app-ads.txt' | '/privacy' | '/terms' | '/tools'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app-ads.txt' | '/privacy' | '/terms'
-  id: '__root__' | '/' | '/app-ads.txt' | '/privacy' | '/terms'
+  to: '/' | '/app-ads.txt' | '/privacy' | '/terms' | '/tools'
+  id: '__root__' | '/' | '/app-ads.txt' | '/privacy' | '/terms' | '/tools'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   AppAdsDottxtRoute: typeof AppAdsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ToolsRoute: typeof ToolsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppAdsDottxtRoute: AppAdsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ToolsRoute: ToolsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

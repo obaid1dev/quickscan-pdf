@@ -11,6 +11,11 @@ export const Route = createFileRoute("/terms")({
           "The terms that apply when you use QuickScan PDF: your free license, your content, and the ground rules for the app.",
       },
       { property: "og:title", content: "Terms of Use — QuickScan PDF" },
+      {
+        property: "og:description",
+        content:
+          "The terms that apply when you use QuickScan PDF: your free license, your content, and the ground rules for the app.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

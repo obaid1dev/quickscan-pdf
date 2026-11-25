@@ -5,6 +5,7 @@ export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy — QuickScan PDF" },
+      { property: "og:title", content: "Privacy Policy — QuickScan PDF" },
       {
         name: "description",
         content:
