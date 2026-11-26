@@ -15,30 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CropGlyph, PlayStoreButton } from "@/components/brand";
-import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { toolPath, getTool, TOOLS } from "@/lib/tools";
+import { toolHead, jsonLdScript } from "@/lib/seo";
+import { formatBytes } from "@/lib/pdf-utils";
+import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
-
-export const Route = createFileRoute("/tools")({
-  head: () => ({
-    meta: [
-      { title: "Free PDF Compressor — QuickScan PDF" },
-      {
-        name: "description",
-        content:
-          "Make a smaller PDF with QuickScan PDF's free browser-based compressor. Choose a compression level; your file stays on your device.",
-      },
-      { property: "og:title", content: "Free PDF Compressor — QuickScan PDF" },
-      {
-        property: "og:description",
-        content:
-          "Choose a compression level and make a lighter PDF. Your file stays on your device.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: ToolsPage,
-});
 
 type CompressionMode = "auto" | "light" | "balanced" | "strong";
 
@@ -70,7 +51,16 @@ const MODES: { value: CompressionMode; label: string; detail: string }[] = [
   { value: "strong", label: "Strong", detail: "Make it much smaller" },
 ];
 
-function ToolsPage() {
+export const Route = createFileRoute("/tools/compress-pdf")({
+  head: () => {
+    const tool = getTool("compress-pdf")!;
+    return toolHead(tool);
+  },
+  component: CompressPage,
+});
+
+function CompressPage() {
+  const tool = getTool("compress-pdf")!;
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<CompressionMode>("auto");
   const [result, setResult] = useState<CompressionResult | null>(null);
@@ -133,7 +123,8 @@ function ToolsPage() {
               ? PROFILES.balanced
               : PROFILES.light
           : PROFILES[mode];
-      const profileName = mode === "auto" ? `Auto · ${selectedProfile.label}` : selectedProfile.label;
+      const profileName =
+        mode === "auto" ? `Auto · ${selectedProfile.label}` : selectedProfile.label;
 
       let outputDocument: InstanceType<typeof jsPDF> | null = null;
       for (let pageNumber = 1; pageNumber <= sourceDocument.numPages; pageNumber += 1) {
@@ -242,20 +233,17 @@ function ToolsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
-
-      <main className="mx-auto w-full max-w-[1080px] px-5 pb-24 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
+      <div className="mx-auto w-full max-w-[1080px] px-5 pb-24 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
         <div className="max-w-[46rem]">
           <p className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
             <CropGlyph className="text-primary" />
-            Tools / 01
+            Tools / Compress PDF
           </p>
           <h1 className="mt-5 font-display text-[clamp(2.5rem,5vw,4rem)] font-semibold leading-[0.98] text-foreground">
-            Give your PDF some breathing room.
+            {tool.heading}
           </h1>
           <p className="mt-5 max-w-[38rem] text-[15px] leading-[1.7] text-muted-foreground">
-            Make a lighter copy, then get on with your day. Your document is processed in this
-            browser and never uploaded.
+            {tool.intro}
           </p>
         </div>
 
@@ -267,12 +255,19 @@ function ToolsPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="font-mono text-[10.5px] text-muted-foreground">PDF / COMPRESSOR</p>
-                <h2 id="compressor-title" className="mt-2 font-display text-2xl font-semibold text-foreground">
+                <h2
+                  id="compressor-title"
+                  className="mt-2 font-display text-2xl font-semibold text-foreground"
+                >
                   A smaller file, on your terms.
                 </h2>
               </div>
               <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-md border border-line bg-surface sm:flex">
-                <FileText className="h-4 w-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
+                <FileText
+                  className="h-4 w-4 text-foreground"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
               </span>
             </div>
 
@@ -286,7 +281,9 @@ function ToolsPage() {
               onDrop={handleDrop}
               className={cn(
                 "mt-7 flex min-h-[154px] cursor-pointer flex-col items-center justify-center border border-dashed px-5 py-6 text-center transition-colors",
-                isDragging ? "border-primary bg-primary/5" : "border-line bg-surface/50 hover:bg-surface",
+                isDragging
+                  ? "border-primary bg-primary/5"
+                  : "border-line bg-surface/50 hover:bg-surface",
               )}
             >
               <input
@@ -358,7 +355,8 @@ function ToolsPage() {
 
             <div className="mt-6 flex flex-col gap-4 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
               <p className="max-w-[27rem] text-[11.5px] leading-[1.5] text-muted-foreground">
-                Pages are rebuilt as images. Selectable text, links, and form fields won’t carry over.
+                Pages are rebuilt as images. Selectable text, links, and form fields won’t carry
+                over.
               </p>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -391,7 +389,9 @@ function ToolsPage() {
             {isBusy && progress ? (
               <div className="mt-5" role="status" aria-live="polite">
                 <div className="mb-2 flex justify-between gap-3 font-mono text-[10.5px] text-muted-foreground">
-                  <span>Working on page {progress.page} of {progress.total}</span>
+                  <span>
+                    Working on page {progress.page} of {progress.total}
+                  </span>
                   <span>{Math.round((progress.page / progress.total) * 100)}%</span>
                 </div>
                 <Progress value={(progress.page / progress.total) * 100} className="h-1.5" />
@@ -410,7 +410,9 @@ function ToolsPage() {
                   <span
                     className={cn(
                       "flex h-7 w-7 items-center justify-center rounded-full",
-                      result.blob ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground",
+                      result.blob
+                        ? "bg-primary/10 text-primary"
+                        : "bg-secondary text-muted-foreground",
                     )}
                   >
                     {result.blob ? (
@@ -420,12 +422,18 @@ function ToolsPage() {
                     )}
                   </span>
                   <p className="font-display text-[15px] font-semibold text-foreground">
-                    {result.blob ? "Your lighter PDF is ready." : "This PDF is already smaller at this level."}
+                    {result.blob
+                      ? "Your lighter PDF is ready."
+                      : "This PDF is already smaller at this level."}
                   </p>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[10.5px] text-muted-foreground">
-                  <span>{formatBytes(result.originalSize)} → {formatBytes(result.outputSize)}</span>
-                  <span>{result.pages} {result.pages === 1 ? "page" : "pages"}</span>
+                  <span>
+                    {formatBytes(result.originalSize)} → {formatBytes(result.outputSize)}
+                  </span>
+                  <span>
+                    {result.pages} {result.pages === 1 ? "page" : "pages"}
+                  </span>
                   <span>{result.profile}</span>
                 </div>
                 {result.blob ? (
@@ -450,7 +458,11 @@ function ToolsPage() {
             <div>
               <p className="font-mono text-[10.5px] text-muted-foreground">A small promise</p>
               <div className="mt-4 flex items-start gap-3">
-                <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} aria-hidden="true" />
+                <LockKeyhole
+                  className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
                 <p className="text-[13px] leading-[1.6] text-muted-foreground">
                   No sign-in. No upload. The PDF exists here only while this page is open.
                 </p>
@@ -476,12 +488,15 @@ function ToolsPage() {
                 className="h-10 w-10 shrink-0 rounded-[10px] ring-1 ring-ink/10"
               />
               <div>
-                <p className="font-mono text-[10px] text-muted-foreground">For the next paper pile</p>
+                <p className="font-mono text-[10px] text-muted-foreground">
+                  For the next paper pile
+                </p>
                 <h2 className="mt-1 font-display text-[17px] font-semibold leading-tight text-foreground">
                   Take QuickScan PDF with you.
                 </h2>
                 <p className="mt-1 max-w-[35rem] text-[12px] leading-[1.55] text-muted-foreground">
-                  Scan, straighten, and share the page right from your Android phone. No cloud copy, no account.
+                  Scan, straighten, and share the page right from your Android phone. No cloud copy,
+                  no account.
                 </p>
               </div>
             </div>
@@ -494,14 +509,34 @@ function ToolsPage() {
           <span>Nothing is kept after you leave this page.</span>
           <ArrowUpRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden="true" />
         </div>
-      </main>
 
-      <SiteFooter />
+        <nav className="mt-12 flex flex-wrap justify-between items-end gap-3 border-t border-line pt-8">
+          <Link
+            to="/tools"
+            className="inline-flex items-center gap-2 rounded-sm text-[12px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            ← Back to tools
+          </Link>
+          <div className="flex flex-wrap gap-2">
+            {relatedTools(tool).map((related) => (
+              <Link
+                key={related.slug}
+                to={toolPath(related)}
+                className="inline-flex items-center gap-2 rounded-sm border border-line px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                {related.icon}
+                {related.name}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      </div>
     </div>
   );
 }
 
-function formatBytes(bytes: number) {
-  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(bytes >= 10 * 1024 * 1024 ? 0 : 1)} MB`;
+function relatedTools(tool: (typeof TOOLS)[number], count = 2) {
+  const index = TOOLS.findIndex((item) => item.slug === tool.slug);
+  const ordered = [...TOOLS.slice(index + 1), ...TOOLS.slice(0, Math.max(index, 0))];
+  return ordered.filter((item) => item.slug !== tool.slug).slice(0, count);
 }

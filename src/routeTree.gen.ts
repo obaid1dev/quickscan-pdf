@@ -13,7 +13,17 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppAdsDottxtRouteImport } from './routes/app-ads[.]txt'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as ToolsRouteImport } from './routes/tools'
+import { Route as ToolsIndexRouteImport } from './routes/tools/index'
+import { Route as ToolsLayoutRouteImport } from './routes/tools/_layout'
+import { Route as ToolsCompressPdfRouteImport } from './routes/tools/compress-pdf'
+import { Route as ToolsJpgToPdfRouteImport } from './routes/tools/jpg-to-pdf'
+import { Route as ToolsMergePdfRouteImport } from './routes/tools/merge-pdf'
+import { Route as ToolsPdfToJpgRouteImport } from './routes/tools/pdf-to-jpg'
+import { Route as ToolsPdfToTextRouteImport } from './routes/tools/pdf-to-text'
+import { Route as ToolsRemovePagesRouteImport } from './routes/tools/remove-pages'
+import { Route as ToolsRotatePdfRouteImport } from './routes/tools/rotate-pdf'
+import { Route as ToolsSplitPdfRouteImport } from './routes/tools/split-pdf'
+import { Route as ToolsWatermarkPdfRouteImport } from './routes/tools/watermark-pdf'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,9 +45,59 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ToolsRoute = ToolsRouteImport.update({
-  id: '/tools',
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsLayoutRoute = ToolsLayoutRouteImport.update({
+  id: '/tools/_layout',
   path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCompressPdfRoute = ToolsCompressPdfRouteImport.update({
+  id: '/tools/compress-pdf',
+  path: '/tools/compress-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsJpgToPdfRoute = ToolsJpgToPdfRouteImport.update({
+  id: '/tools/jpg-to-pdf',
+  path: '/tools/jpg-to-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsMergePdfRoute = ToolsMergePdfRouteImport.update({
+  id: '/tools/merge-pdf',
+  path: '/tools/merge-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsPdfToJpgRoute = ToolsPdfToJpgRouteImport.update({
+  id: '/tools/pdf-to-jpg',
+  path: '/tools/pdf-to-jpg',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsPdfToTextRoute = ToolsPdfToTextRouteImport.update({
+  id: '/tools/pdf-to-text',
+  path: '/tools/pdf-to-text',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRemovePagesRoute = ToolsRemovePagesRouteImport.update({
+  id: '/tools/remove-pages',
+  path: '/tools/remove-pages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRotatePdfRoute = ToolsRotatePdfRouteImport.update({
+  id: '/tools/rotate-pdf',
+  path: '/tools/rotate-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSplitPdfRoute = ToolsSplitPdfRouteImport.update({
+  id: '/tools/split-pdf',
+  path: '/tools/split-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsWatermarkPdfRoute = ToolsWatermarkPdfRouteImport.update({
+  id: '/tools/watermark-pdf',
+  path: '/tools/watermark-pdf',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -46,14 +106,33 @@ export interface FileRoutesByFullPath {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/tools': typeof ToolsRoute
+  '/tools': typeof ToolsLayoutRoute
+  '/tools/compress-pdf': typeof ToolsCompressPdfRoute
+  '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
+  '/tools/merge-pdf': typeof ToolsMergePdfRoute
+  '/tools/pdf-to-jpg': typeof ToolsPdfToJpgRoute
+  '/tools/pdf-to-text': typeof ToolsPdfToTextRoute
+  '/tools/remove-pages': typeof ToolsRemovePagesRoute
+  '/tools/rotate-pdf': typeof ToolsRotatePdfRoute
+  '/tools/split-pdf': typeof ToolsSplitPdfRoute
+  '/tools/watermark-pdf': typeof ToolsWatermarkPdfRoute
+  '/tools/': typeof ToolsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/tools': typeof ToolsRoute
+  '/tools': typeof ToolsIndexRoute
+  '/tools/compress-pdf': typeof ToolsCompressPdfRoute
+  '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
+  '/tools/merge-pdf': typeof ToolsMergePdfRoute
+  '/tools/pdf-to-jpg': typeof ToolsPdfToJpgRoute
+  '/tools/pdf-to-text': typeof ToolsPdfToTextRoute
+  '/tools/remove-pages': typeof ToolsRemovePagesRoute
+  '/tools/rotate-pdf': typeof ToolsRotatePdfRoute
+  '/tools/split-pdf': typeof ToolsSplitPdfRoute
+  '/tools/watermark-pdf': typeof ToolsWatermarkPdfRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +140,69 @@ export interface FileRoutesById {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/tools': typeof ToolsRoute
+  '/tools/_layout': typeof ToolsLayoutRoute
+  '/tools/compress-pdf': typeof ToolsCompressPdfRoute
+  '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
+  '/tools/merge-pdf': typeof ToolsMergePdfRoute
+  '/tools/pdf-to-jpg': typeof ToolsPdfToJpgRoute
+  '/tools/pdf-to-text': typeof ToolsPdfToTextRoute
+  '/tools/remove-pages': typeof ToolsRemovePagesRoute
+  '/tools/rotate-pdf': typeof ToolsRotatePdfRoute
+  '/tools/split-pdf': typeof ToolsSplitPdfRoute
+  '/tools/watermark-pdf': typeof ToolsWatermarkPdfRoute
+  '/tools/': typeof ToolsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app-ads.txt' | '/privacy' | '/terms' | '/tools'
+  fullPaths:
+    | '/'
+    | '/app-ads.txt'
+    | '/privacy'
+    | '/terms'
+    | '/tools'
+    | '/tools/compress-pdf'
+    | '/tools/jpg-to-pdf'
+    | '/tools/merge-pdf'
+    | '/tools/pdf-to-jpg'
+    | '/tools/pdf-to-text'
+    | '/tools/remove-pages'
+    | '/tools/rotate-pdf'
+    | '/tools/split-pdf'
+    | '/tools/watermark-pdf'
+    | '/tools/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app-ads.txt' | '/privacy' | '/terms' | '/tools'
-  id: '__root__' | '/' | '/app-ads.txt' | '/privacy' | '/terms' | '/tools'
+  to:
+    | '/'
+    | '/app-ads.txt'
+    | '/privacy'
+    | '/terms'
+    | '/tools'
+    | '/tools/compress-pdf'
+    | '/tools/jpg-to-pdf'
+    | '/tools/merge-pdf'
+    | '/tools/pdf-to-jpg'
+    | '/tools/pdf-to-text'
+    | '/tools/remove-pages'
+    | '/tools/rotate-pdf'
+    | '/tools/split-pdf'
+    | '/tools/watermark-pdf'
+  id:
+    | '__root__'
+    | '/'
+    | '/app-ads.txt'
+    | '/privacy'
+    | '/terms'
+    | '/tools/_layout'
+    | '/tools/compress-pdf'
+    | '/tools/jpg-to-pdf'
+    | '/tools/merge-pdf'
+    | '/tools/pdf-to-jpg'
+    | '/tools/pdf-to-text'
+    | '/tools/remove-pages'
+    | '/tools/rotate-pdf'
+    | '/tools/split-pdf'
+    | '/tools/watermark-pdf'
+    | '/tools/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,7 +210,17 @@ export interface RootRouteChildren {
   AppAdsDottxtRoute: typeof AppAdsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
-  ToolsRoute: typeof ToolsRoute
+  ToolsLayoutRoute: typeof ToolsLayoutRoute
+  ToolsCompressPdfRoute: typeof ToolsCompressPdfRoute
+  ToolsJpgToPdfRoute: typeof ToolsJpgToPdfRoute
+  ToolsMergePdfRoute: typeof ToolsMergePdfRoute
+  ToolsPdfToJpgRoute: typeof ToolsPdfToJpgRoute
+  ToolsPdfToTextRoute: typeof ToolsPdfToTextRoute
+  ToolsRemovePagesRoute: typeof ToolsRemovePagesRoute
+  ToolsRotatePdfRoute: typeof ToolsRotatePdfRoute
+  ToolsSplitPdfRoute: typeof ToolsSplitPdfRoute
+  ToolsWatermarkPdfRoute: typeof ToolsWatermarkPdfRoute
+  ToolsIndexRoute: typeof ToolsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -109,11 +253,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tools': {
-      id: '/tools'
+    '/tools/': {
+      id: '/tools/'
+      path: '/tools'
+      fullPath: '/tools/'
+      preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/_layout': {
+      id: '/tools/_layout'
       path: '/tools'
       fullPath: '/tools'
-      preLoaderRoute: typeof ToolsRouteImport
+      preLoaderRoute: typeof ToolsLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/compress-pdf': {
+      id: '/tools/compress-pdf'
+      path: '/tools/compress-pdf'
+      fullPath: '/tools/compress-pdf'
+      preLoaderRoute: typeof ToolsCompressPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/jpg-to-pdf': {
+      id: '/tools/jpg-to-pdf'
+      path: '/tools/jpg-to-pdf'
+      fullPath: '/tools/jpg-to-pdf'
+      preLoaderRoute: typeof ToolsJpgToPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/merge-pdf': {
+      id: '/tools/merge-pdf'
+      path: '/tools/merge-pdf'
+      fullPath: '/tools/merge-pdf'
+      preLoaderRoute: typeof ToolsMergePdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/pdf-to-jpg': {
+      id: '/tools/pdf-to-jpg'
+      path: '/tools/pdf-to-jpg'
+      fullPath: '/tools/pdf-to-jpg'
+      preLoaderRoute: typeof ToolsPdfToJpgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/pdf-to-text': {
+      id: '/tools/pdf-to-text'
+      path: '/tools/pdf-to-text'
+      fullPath: '/tools/pdf-to-text'
+      preLoaderRoute: typeof ToolsPdfToTextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/remove-pages': {
+      id: '/tools/remove-pages'
+      path: '/tools/remove-pages'
+      fullPath: '/tools/remove-pages'
+      preLoaderRoute: typeof ToolsRemovePagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/rotate-pdf': {
+      id: '/tools/rotate-pdf'
+      path: '/tools/rotate-pdf'
+      fullPath: '/tools/rotate-pdf'
+      preLoaderRoute: typeof ToolsRotatePdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/split-pdf': {
+      id: '/tools/split-pdf'
+      path: '/tools/split-pdf'
+      fullPath: '/tools/split-pdf'
+      preLoaderRoute: typeof ToolsSplitPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/watermark-pdf': {
+      id: '/tools/watermark-pdf'
+      path: '/tools/watermark-pdf'
+      fullPath: '/tools/watermark-pdf'
+      preLoaderRoute: typeof ToolsWatermarkPdfRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -124,7 +338,17 @@ const rootRouteChildren: RootRouteChildren = {
   AppAdsDottxtRoute: AppAdsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
-  ToolsRoute: ToolsRoute,
+  ToolsLayoutRoute: ToolsLayoutRoute,
+  ToolsCompressPdfRoute: ToolsCompressPdfRoute,
+  ToolsJpgToPdfRoute: ToolsJpgToPdfRoute,
+  ToolsMergePdfRoute: ToolsMergePdfRoute,
+  ToolsPdfToJpgRoute: ToolsPdfToJpgRoute,
+  ToolsPdfToTextRoute: ToolsPdfToTextRoute,
+  ToolsRemovePagesRoute: ToolsRemovePagesRoute,
+  ToolsRotatePdfRoute: ToolsRotatePdfRoute,
+  ToolsSplitPdfRoute: ToolsSplitPdfRoute,
+  ToolsWatermarkPdfRoute: ToolsWatermarkPdfRoute,
+  ToolsIndexRoute: ToolsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

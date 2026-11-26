@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Brand, PlayStoreButton } from "@/components/brand";
+import { TOOLS, toolPath } from "@/lib/tools";
 
 const NAV = [
   { href: "/#features", label: "Features" },
@@ -50,8 +51,8 @@ export function SiteFooter() {
           <div className="max-w-[19rem]">
             <Brand />
             <p className="mt-4 text-[13.5px] leading-relaxed text-muted-foreground">
-              A pocket scanner for Android. Free, offline, and yours. No account, no cloud copy,
-              no watermark.
+              A pocket scanner for Android. Free, offline, and yours. No account, no cloud copy, no
+              watermark.
             </p>
           </div>
 
@@ -70,14 +71,24 @@ export function SiteFooter() {
                   </a>
                 </li>
               ))}
-              <li>
-                <Link
-                  to="/tools"
-                  className="rounded-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
-                >
-                  Tools
-                </Link>
-              </li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-tools" className="text-[13px]">
+            <p id="footer-tools" className="font-mono text-[10.5px] text-muted-foreground">
+              Tools
+            </p>
+            <ul className="mt-4 space-y-2.5">
+              {TOOLS.map((tool) => (
+                <li key={tool.slug}>
+                  <Link
+                    to={toolPath(tool)}
+                    className="rounded-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
+                  >
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 

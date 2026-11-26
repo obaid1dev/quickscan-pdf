@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { siteJsonLd, jsonLdScript } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -78,11 +79,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "QuickScan PDF — Scan anything into a clean PDF" },
-      { name: "description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone. Free on Android." },
+      {
+        name: "description",
+        content:
+          "Turn any photo into a tidy, share-ready PDF straight from your phone. Free on Android, plus free browser PDF tools: compress, merge, split, rotate, convert, and edit — nothing is uploaded.",
+      },
+      { name: "keywords", content: "PDF scanner, photo to pdf, scanner app, free pdf tools, compress pdf, merge pdf, split pdf" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
       { property: "og:title", content: "QuickScan PDF — Scan anything into a clean PDF" },
-      { property: "og:description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone." },
+      { property: "og:description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone. Free on Android." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "QuickScan PDF" },
+      { property: "og:url", content: "/" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "QuickScan PDF — Scan anything into a clean PDF" },
+      { name: "twitter:description", content: "Turn any photo into a tidy, share-ready PDF straight from your phone." },
+      { name: "theme-color", content: "#F0F1EB" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -96,7 +108,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      ...[0], // placeholder; canonical/sitemap are page-level
     ],
+    scripts: [jsonLdScript(siteJsonLd())],
   }),
   shellComponent: RootShell,
   component: RootComponent,
