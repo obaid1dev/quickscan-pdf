@@ -7,7 +7,7 @@ import {
   FileUp,
   LoaderCircle,
   LockKeyhole,
-  X,
+  RotateCcw,
 } from "lucide-react";
 import { useState, type ChangeEvent, type DragEvent } from "react";
 
@@ -110,8 +110,9 @@ function ToolsPage() {
     setResult(null);
     setProgress(null);
 
-    let sourceDocument: Awaited<ReturnType<typeof import("pdfjs-dist").getDocument>["promise"]> | null =
-      null;
+    type PdfLoadingTask = ReturnType<typeof import("pdfjs-dist").getDocument>;
+    let sourceDocument: Awaited<PdfLoadingTask["promise"]> | null = null;
+    let loadingTask: PdfLoadingTask | null = null;
     try {
       const [{ getDocument, GlobalWorkerOptions }, pdfWorker, { jsPDF }] = await Promise.all([
         import("pdfjs-dist"),
@@ -120,7 +121,7 @@ function ToolsPage() {
       ]);
       GlobalWorkerOptions.workerSrc = pdfWorker.default;
 
-      const loadingTask = getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+      loadingTask = getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
       sourceDocument = await loadingTask.promise;
 
       const pageBytes = file.size / Math.max(sourceDocument.numPages, 1);
@@ -201,10 +202,23 @@ function ToolsPage() {
           : "We couldn't open this PDF. Check that it's valid and try again.";
       setError(message);
     } finally {
-      if (sourceDocument) await sourceDocument.destroy();
-      setIsBusy(false);
-      setProgress(null);
+      try {
+        if (loadingTask) await loadingTask.destroy();
+      } catch {
+        // Cleanup errors should never leave the compressor stuck in its busy state.
+      } finally {
+        setIsBusy(false);
+        setProgress(null);
+      }
     }
+  }
+
+  function startOver() {
+    setFile(null);
+    setMode("auto");
+    setResult(null);
+    setError("");
+    setProgress(null);
   }
 
   function downloadCompressedPdf() {
@@ -346,19 +360,32 @@ function ToolsPage() {
               <p className="max-w-[27rem] text-[11.5px] leading-[1.5] text-muted-foreground">
                 Pages are rebuilt as images. Selectable text, links, and form fields won’t carry over.
               </p>
-              <Button
-                type="button"
-                onClick={() => void compressPdf()}
-                disabled={!file || isBusy}
-                className="h-11 shrink-0 rounded-sm px-5"
-              >
-                {isBusy ? (
-                  <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
-                ) : (
-                  <FileText className="h-4 w-4" aria-hidden="true" />
-                )}
-                {isBusy ? "Compressing…" : result ? "Compress again" : "Compress PDF"}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  onClick={() => void compressPdf()}
+                  disabled={!file || isBusy}
+                  className="h-11 shrink-0 rounded-sm px-5"
+                >
+                  {isBusy ? (
+                    <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <FileText className="h-4 w-4" aria-hidden="true" />
+                  )}
+                  {isBusy ? "Compressing…" : result ? "Compress again" : "Compress PDF"}
+                </Button>
+                {result ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={startOver}
+                    className="h-11 shrink-0 rounded-sm px-4"
+                  >
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    Start over
+                  </Button>
+                ) : null}
+              </div>
             </div>
 
             {isBusy && progress ? (
