@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/tools/")({
+export const Route = createFileRoute("/tools")({
   head: () => ({
     ...pageHead({
       title: "Free PDF tools — compress, merge, split, rotate, convert",
