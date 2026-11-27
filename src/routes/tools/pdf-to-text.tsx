@@ -7,6 +7,7 @@ import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
 import { isPdfFile, downloadBlob, formatBytes } from "@/lib/pdf-utils";
+import { getPdfPageCount } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -35,22 +36,14 @@ function PdfToTextPage() {
     setTotalPages(null);
     setError("");
     setDone(false);
+    void readPageCount(nextFile);
   }
 
-  async function readPageCount() {
-    if (!file) return;
-    const [{ getDocument, GlobalWorkerOptions }, worker] = await Promise.all([
-      import("pdfjs-dist"),
-      import("pdfjs-dist/build/pdf.worker.min.mjs?url"),
-    ]);
-    GlobalWorkerOptions.workerSrc = worker.default;
-    const task = getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
-    const doc = await task.promise;
-    setTotalPages(doc.numPages);
+  async function readPageCount(target: File) {
     try {
-      await task.destroy();
+      setTotalPages(await getPdfPageCount(new Uint8Array(await target.arrayBuffer())));
     } catch {
-      // ignore
+      setError("That file isn't a readable PDF. Try another one.");
     }
   }
 
@@ -74,7 +67,7 @@ function PdfToTextPage() {
         const page = await doc.getPage(pageNumber);
         const content = await page.getTextContent();
         const strings = content.items
-          .filter((item) => item.type === "str")
+          .filter((item) => "str" in item)
           .map((item) => (item as { str: string }).str);
         text += strings.join(" ") + "\n\n";
       }
@@ -194,7 +187,7 @@ function PdfToTextPage() {
               )}
             </label>
 
-            {file && totalPages !== null ? (
+            {file ? (
               <div className="mt-7 flex items-center gap-3">
                 <Button
                   type="button"

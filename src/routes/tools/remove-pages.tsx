@@ -8,6 +8,7 @@ import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
 import { parsePageSelection, downloadBlob, formatBytes } from "@/lib/pdf-utils";
+import { getPdfPageCount, removePdfPages } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -36,13 +37,15 @@ function RemovePagesPage() {
     setError("");
     setTotalPages(null);
     setDone(false);
+    void readPageCount(nextFile);
   }
 
-  async function readPageCount() {
-    if (!file) return;
-    const { PDFDocument } = await import("pdf-lib");
-    const doc = await PDFDocument.load(await file.arrayBuffer());
-    setTotalPages(doc.getPageCount());
+  async function readPageCount(target: File) {
+    try {
+      setTotalPages(await getPdfPageCount(new Uint8Array(await target.arrayBuffer())));
+    } catch {
+      setError("That file isn't a readable PDF. Try another one.");
+    }
   }
 
   function clearFile() {
@@ -58,26 +61,9 @@ function RemovePagesPage() {
     setIsBusy(true);
     setError("");
     try {
-      const { PDFDocument } = await import("pdf-lib");
-
       const toRemove = parsePageSelection(pages, totalPages);
-      const keep = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
-        (p) => !toRemove.includes(p),
-      );
-
-      if (keep.length === 0) {
-        throw new Error("That would remove every page. Keep at least one.");
-      }
-
-      const source = await PDFDocument.load(await file.arrayBuffer());
-      const doc = await PDFDocument.create();
-      const copiedPages = await doc.copyPages(
-        source,
-        keep.map((p) => p - 1),
-      );
-      copiedPages.forEach((page) => doc.addPage(page));
-
-      const blob = await doc.save();
+      const bytes = await removePdfPages(new Uint8Array(await file.arrayBuffer()), toRemove);
+      const blob = new Blob([bytes], { type: "application/pdf" });
       const name = `${file.name.replace(/\.pdf$/i, "")}-cleaned.pdf`;
       downloadBlob(blob, name);
       setDone(true);
@@ -208,10 +194,7 @@ function RemovePagesPage() {
             <div className="mt-6 flex items-center gap-3">
               <Button
                 type="button"
-                onClick={() => {
-                  if (!file || totalPages === null) return;
-                  readPageCount();
-                }}
+                onClick={removePages}
                 disabled={!file || totalPages === null || isBusy}
                 className="flex-1 h-11 rounded-sm px-5"
               >

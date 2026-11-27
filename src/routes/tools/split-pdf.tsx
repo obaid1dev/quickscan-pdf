@@ -7,7 +7,8 @@ import { FileDrop } from "@/components/file-drop";
 import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
-import { isPdfFile } from "@/lib/pdf-utils";
+import { downloadFiles, isPdfFile } from "@/lib/pdf-utils";
+import { getPdfPageCount, splitPdfBytes } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -35,13 +36,15 @@ function SplitPage() {
     setFile(nextFile);
     setError("");
     setTotalPages(null);
+    void readPageCount(nextFile);
   }
 
-  async function readPageCount() {
-    if (!file) return;
-    const { PDFDocument } = await import("pdf-lib");
-    const doc = await PDFDocument.load(await file.arrayBuffer());
-    setTotalPages(doc.getPageCount());
+  async function readPageCount(target: File) {
+    try {
+      setTotalPages(await getPdfPageCount(new Uint8Array(await target.arrayBuffer())));
+    } catch {
+      setError("That file isn't a readable PDF. Try another one.");
+    }
   }
 
   function clearFile() {
@@ -58,21 +61,14 @@ function SplitPage() {
     try {
       const { parsePageGroups } = await import("@/lib/pdf-utils");
       const groups = parsePageGroups(selection, totalPages);
-      const { PDFDocument } = await import("pdf-lib");
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const documents = await splitPdfBytes(bytes, groups);
 
       const outputs: { blob: Blob; name: string }[] = [];
       for (let i = 0; i < groups.length; i += 1) {
-        const source = await PDFDocument.load(await file.arrayBuffer());
         const pages = groups[i];
-        const doc = await PDFDocument.create();
-        const copiedPages = await doc.copyPages(
-          source,
-          pages.map((p) => p - 1),
-        );
-        copiedPages.forEach((page) => doc.addPage(page));
-        const blob = await doc.save();
         outputs.push({
-          blob,
+          blob: new Blob([documents[i]], { type: "application/pdf" }),
           name: `pages-${pages[0]}${pages.length > 1 ? `-${pages[pages.length - 1]}` : ""}.pdf`,
         });
       }
@@ -248,11 +244,8 @@ function SplitPage() {
             <div className="mt-6 flex items-center gap-3">
               <Button
                 type="button"
-                onClick={() => {
-                  if (!file || totalPages === null) return;
-                  readPageCount();
-                }}
-                disabled={!file || isBusy}
+                onClick={splitPdf}
+                disabled={!file || totalPages === null || isBusy}
                 className="flex-1 h-11 rounded-sm px-5"
               >
                 {isBusy ? (

@@ -7,7 +7,8 @@ import { FileDrop } from "@/components/file-drop";
 import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
-import { formatBytes, downloadFiles, isPdfFile } from "@/lib/pdf-utils";
+import { formatBytes, downloadBlob, isPdfFile } from "@/lib/pdf-utils";
+import { mergePdfBytes } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -22,15 +23,11 @@ function MergePage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState("");
-  const [resultName, setResultName] = useState("");
 
   function handleFilesChange(next: File[]) {
     const pdfs = next.filter(isPdfFile);
-    if (pdfs.length !== next.length) {
-      setError("Only PDF files can be merged.");
-    }
     setFiles(pdfs);
-    setError("");
+    setError(pdfs.length !== next.length ? "Only PDF files can be merged." : "");
   }
 
   function handleMove(from: number, to: number) {
@@ -46,18 +43,15 @@ function MergePage() {
     setIsBusy(true);
     setError("");
     try {
-      const { PDFDocument } = await import("pdf-lib");
-      const merged = await PDFDocument.create();
-      for (const file of files) {
-        const source = await PDFDocument.load(await file.arrayBuffer());
-        const copiedPages = await merged.copyPages(source, source.getPageIndices());
-        copiedPages.forEach((page) => merged.addPage(page));
-      }
-      const blob = await merged.save();
-      setResultName(
-        `merged-${files.map((f) => f.name.replace(/\.pdf$/i, "")).join("_")}.pdf`.slice(0, 120),
+      const sources = await Promise.all(
+        files.map(async (file) => new Uint8Array(await file.arrayBuffer())),
       );
-      await downloadFiles([{ blob, name: resultName || "merged.pdf" }], resultName || "merged.pdf");
+      const bytes = await mergePdfBytes(sources);
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const name =
+        `merged-${files.map((f) => f.name.replace(/\.pdf$/i, "")).join("_")}.pdf`.slice(0, 120) ||
+        "merged.pdf";
+      downloadBlob(blob, name);
     } catch (err) {
       setError("We couldn't merge these PDFs. Make sure they're valid and not password-protected.");
       console.error(err);

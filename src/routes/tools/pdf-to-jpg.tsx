@@ -15,6 +15,7 @@ import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
 import { isPdfFile, downloadFiles, formatBytes } from "@/lib/pdf-utils";
+import { getPdfPageCount } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -42,27 +43,19 @@ function PdfToJpgPage() {
     setError("");
     setTotalPages(null);
     setDone(false);
+    void readPageCount(nextFile);
   }
 
-  async function readPageCount() {
-    if (!file) return;
-    const [{ getDocument, GlobalWorkerOptions }, worker] = await Promise.all([
-      import("pdfjs-dist"),
-      import("pdfjs-dist/build/pdf.worker.min.mjs?url"),
-    ]);
-    GlobalWorkerOptions.workerSrc = worker.default;
-    const task = getDocument({ data: await new Uint8Array(await file.arrayBuffer()) });
-    const doc = await task.promise;
-    setTotalPages(doc.numPages);
+  async function readPageCount(target: File) {
     try {
-      await task.destroy();
+      setTotalPages(await getPdfPageCount(new Uint8Array(await target.arrayBuffer())));
     } catch {
-      // ignore
+      setError("That file isn't a readable PDF. Try another one.");
     }
   }
 
   async function convertToJpg() {
-    if (!file || totalPages === null || isBusy) return;
+    if (!file || isBusy) return;
     setIsBusy(true);
     setError("");
     try {
@@ -76,7 +69,7 @@ function PdfToJpgPage() {
       const doc = await task.promise;
 
       const outputs: { blob: Blob; name: string }[] = [];
-      for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
+      for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {
         const page = await doc.getPage(pageNumber);
         const viewport = page.getViewport({ scale: 1.5 });
         const canvas = document.createElement("canvas");
@@ -85,7 +78,7 @@ function PdfToJpgPage() {
         const context = canvas.getContext("2d", { alpha: false });
         if (!context) throw new Error("Could not render page.");
 
-        await page.render({ canvas, canvasContext: context, viewport }).promise;
+        await page.render({ canvas, viewport, background: "rgb(255, 255, 255)" }).promise;
         const blob = await new Promise<Blob>((resolve, reject) => {
           canvas.toBlob(
             (b) => (b ? resolve(b) : reject(new Error("Render failed"))),
@@ -241,11 +234,8 @@ function PdfToJpgPage() {
             <div className="mt-6 flex items-center gap-3">
               <Button
                 type="button"
-                onClick={() => {
-                  if (!file || totalPages === null) return;
-                  readPageCount();
-                }}
-                disabled={!file || totalPages === null || isBusy}
+                onClick={convertToJpg}
+                disabled={!file || isBusy}
                 className="flex-1 h-11 rounded-sm px-5"
               >
                 {isBusy ? (

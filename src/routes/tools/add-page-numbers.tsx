@@ -8,6 +8,7 @@ import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
 import { isPdfFile, downloadBlob, formatBytes } from "@/lib/pdf-utils";
+import { addPageNumbersToPdf, getPdfPageCount } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -46,59 +47,28 @@ function AddPageNumbersPage() {
     setTotalPages(null);
     setError("");
     setDone(false);
+    void readPageCount(nextFile);
   }
 
-  async function readPageCount() {
-    if (!file) return;
-    const { PDFDocument } = await import("pdf-lib");
-    const doc = await PDFDocument.load(await file.arrayBuffer());
-    setTotalPages(doc.getPageCount());
+  async function readPageCount(target: File) {
+    try {
+      setTotalPages(await getPdfPageCount(new Uint8Array(await target.arrayBuffer())));
+    } catch {
+      setError("That file isn't a readable PDF. Try another one.");
+    }
   }
 
   async function addNumbers() {
-    if (!file || totalPages === null || isBusy) return;
+    if (!file || isBusy) return;
     setIsBusy(true);
     setError("");
     try {
-      const { PDFDocument, rgb } = await import("pdf-lib");
-      const doc = await PDFDocument.load(await file.arrayBuffer());
-      const helvetica = doc.embedFont("Helvetica");
-
-      const pages = doc.getPages();
-      const margin = 40;
-
-      pages.forEach((page, index) => {
-        const { width, height } = page.getSize();
-        const number = String(startNumber + index);
-        const widthPts = helvetica.widthOfTextAtSize(number, fontSize);
-        let x = 0;
-        let y = 0;
-
-        if (position === "top-left") {
-          x = margin;
-          y = height - margin;
-        } else if (position === "top-right") {
-          x = width - margin - widthPts;
-          y = height - margin;
-        } else if (position === "bottom-left") {
-          x = margin;
-          y = margin;
-        } else {
-          x = width - margin - widthPts;
-          y = margin;
-        }
-
-        page.drawText(number, {
-          x,
-          y,
-          size: fontSize,
-          font: helvetica,
-          color: rgb(0.07, 0.12, 0.15),
-        });
+      const bytes = await addPageNumbersToPdf(new Uint8Array(await file.arrayBuffer()), {
+        startNumber,
+        fontSize,
+        position,
       });
-
-      const pdfBytes = await doc.save();
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const blob = new Blob([bytes], { type: "application/pdf" });
       const name = `${file.name.replace(/\.pdf$/i, "")}-numbered.pdf`;
       downloadBlob(blob, name);
       setDone(true);

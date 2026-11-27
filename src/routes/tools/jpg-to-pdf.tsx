@@ -33,11 +33,12 @@ function JpgToPdfPage() {
 
   function handleFilesChange(next: File[]) {
     const images = next.filter(isImageFile);
-    if (images.length !== next.length) {
-      setError("Only image files (JPG, PNG, WebP, etc.) can be converted.");
-    }
     setFiles(images);
-    setError("");
+    setError(
+      images.length !== next.length
+        ? "Only image files (JPG, PNG, WebP, etc.) can be converted."
+        : "",
+    );
     setDone(false);
   }
 
@@ -63,7 +64,12 @@ function JpgToPdfPage() {
         const file = files[i];
         const dataUrl = await readAsDataUrl(file);
         const img = await loadImage(dataUrl);
-        const { width: naturalWidth, height: naturalHeight } = img;
+        const naturalWidth = img.naturalWidth || img.width;
+        const naturalHeight = img.naturalHeight || img.height;
+        if (!naturalWidth || !naturalHeight) {
+          throw new Error(`“${file.name}” could not be read as an image.`);
+        }
+        const jpeg = toJpegDataUrl(img);
 
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
@@ -74,7 +80,7 @@ function JpgToPdfPage() {
         const y = (pageHeight - drawHeight) / 2;
 
         if (i > 0) doc.addPage();
-        doc.addImage(dataUrl, "JPEG", x, y, drawWidth, drawHeight, undefined, "FAST");
+        doc.addImage(jpeg, "JPEG", x, y, drawWidth, drawHeight, undefined, "FAST");
       }
 
       const blob = doc.output("blob");
@@ -257,4 +263,17 @@ function loadImage(src: string) {
     img.onerror = () => reject(new Error("Image failed to load."));
     img.src = src;
   });
+}
+
+/** Normalize any browser-decodable image (PNG, WebP, GIF…) to a JPEG data URL. */
+function toJpegDataUrl(img: HTMLImageElement) {
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth || img.width;
+  canvas.height = img.naturalHeight || img.height;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Could not read this image.");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(img, 0, 0);
+  return canvas.toDataURL("image/jpeg", 0.92);
 }

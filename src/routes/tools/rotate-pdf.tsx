@@ -15,6 +15,7 @@ import { CropGlyph } from "@/components/brand";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
 import { formatBytes, downloadBlob } from "@/lib/pdf-utils";
+import { getPdfPageCount, rotatePdfBytes } from "@/lib/pdf-ops";
 import { Link } from "@tanstack/react-router";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
@@ -53,13 +54,15 @@ function RotatePage() {
     setError("");
     setTotalPages(null);
     setDone(false);
+    void readPageCount(nextFile);
   }
 
-  async function readPageCount() {
-    if (!file) return;
-    const { PDFDocument } = await import("pdf-lib");
-    const doc = await PDFDocument.load(await file.arrayBuffer());
-    setTotalPages(doc.getPageCount());
+  async function readPageCount(target: File) {
+    try {
+      setTotalPages(await getPdfPageCount(new Uint8Array(await target.arrayBuffer())));
+    } catch {
+      setError("That file isn't a readable PDF. Try another one.");
+    }
   }
 
   function clearFile() {
@@ -76,30 +79,12 @@ function RotatePage() {
     setError("");
     try {
       const { parsePageSelection } = await import("@/lib/pdf-utils");
-      const { PDFDocument } = await import("pdf-lib");
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const pageCount = await getPdfPageCount(bytes);
+      const targets = applyTo === "all" ? undefined : parsePageSelection(pages, pageCount);
 
-      const source = await PDFDocument.load(await file.arrayBuffer());
-      const pageCount = source.getPageCount();
-      const targets =
-        applyTo === "all"
-          ? Array.from({ length: pageCount }, (_, i) => i + 1)
-          : parsePageSelection(pages, pageCount);
-
-      const doc = await PDFDocument.create();
-      const copiedPages = await doc.copyPages(
-        source,
-        targets.map((p) => p - 1),
-      );
-      copiedPages.forEach((page) => {
-        const { width, height } = page.getSize();
-        if (rotation === 90 || rotation === 270) {
-          page.setSize(height, width);
-        }
-        page.setRotation(rotation);
-        doc.addPage(page);
-      });
-
-      const blob = await doc.save();
+      const output = await rotatePdfBytes(bytes, rotation, targets);
+      const blob = new Blob([output], { type: "application/pdf" });
       const name = `${file.name.replace(/\.pdf$/i, "")}-rotated.pdf`;
       downloadBlob(blob, name);
       setDone(true);
