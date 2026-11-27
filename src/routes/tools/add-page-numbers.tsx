@@ -21,6 +21,11 @@ const POSITIONS: { value: NumberPosition; label: string }[] = [
   { value: "bottom-right", label: "Bottom right" },
 ];
 
+export const Route = createFileRoute("/tools/add-page-numbers")({
+  head: () => toolHead(getTool("add-page-numbers")!),
+  component: AddPageNumbersPage,
+});
+
 function AddPageNumbersPage() {
   const tool = getTool("add-page-numbers")!;
   const [file, setFile] = useState<File | null>(null);
@@ -336,7 +341,7 @@ function AddPageNumbersPage() {
                 to={toolPath(related)}
                 className="inline-flex items-center gap-2 rounded-sm border border-line px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                {related.icon}
+                <related.icon className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden="true" />
                 {related.name}
               </Link>
             ))}

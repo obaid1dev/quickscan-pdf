@@ -14,6 +14,7 @@ import { Route as AppAdsDottxtRouteImport } from './routes/app-ads[.]txt'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ToolsIndexRouteImport } from './routes/tools/index'
+import { Route as ToolsAddPageNumbersRouteImport } from './routes/tools/add-page-numbers'
 import { Route as ToolsCompressPdfRouteImport } from './routes/tools/compress-pdf'
 import { Route as ToolsJpgToPdfRouteImport } from './routes/tools/jpg-to-pdf'
 import { Route as ToolsMergePdfRouteImport } from './routes/tools/merge-pdf'
@@ -47,6 +48,11 @@ const TermsRoute = TermsRouteImport.update({
 const ToolsIndexRoute = ToolsIndexRouteImport.update({
   id: '/tools/',
   path: '/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsAddPageNumbersRoute = ToolsAddPageNumbersRouteImport.update({
+  id: '/tools/add-page-numbers',
+  path: '/tools/add-page-numbers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsCompressPdfRoute = ToolsCompressPdfRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tools/add-page-numbers': typeof ToolsAddPageNumbersRoute
   '/tools/compress-pdf': typeof ToolsCompressPdfRoute
   '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
   '/tools/merge-pdf': typeof ToolsMergePdfRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tools/add-page-numbers': typeof ToolsAddPageNumbersRoute
   '/tools/compress-pdf': typeof ToolsCompressPdfRoute
   '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
   '/tools/merge-pdf': typeof ToolsMergePdfRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tools/add-page-numbers': typeof ToolsAddPageNumbersRoute
   '/tools/compress-pdf': typeof ToolsCompressPdfRoute
   '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
   '/tools/merge-pdf': typeof ToolsMergePdfRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/app-ads.txt'
     | '/privacy'
     | '/terms'
+    | '/tools/add-page-numbers'
     | '/tools/compress-pdf'
     | '/tools/jpg-to-pdf'
     | '/tools/merge-pdf'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/app-ads.txt'
     | '/privacy'
     | '/terms'
+    | '/tools/add-page-numbers'
     | '/tools/compress-pdf'
     | '/tools/jpg-to-pdf'
     | '/tools/merge-pdf'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/app-ads.txt'
     | '/privacy'
     | '/terms'
+    | '/tools/add-page-numbers'
     | '/tools/compress-pdf'
     | '/tools/jpg-to-pdf'
     | '/tools/merge-pdf'
@@ -200,6 +212,7 @@ export interface RootRouteChildren {
   AppAdsDottxtRoute: typeof AppAdsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ToolsAddPageNumbersRoute: typeof ToolsAddPageNumbersRoute
   ToolsCompressPdfRoute: typeof ToolsCompressPdfRoute
   ToolsJpgToPdfRoute: typeof ToolsJpgToPdfRoute
   ToolsMergePdfRoute: typeof ToolsMergePdfRoute
@@ -247,6 +260,13 @@ declare module '@tanstack/react-router' {
       path: '/tools'
       fullPath: '/tools/'
       preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/add-page-numbers': {
+      id: '/tools/add-page-numbers'
+      path: '/tools/add-page-numbers'
+      fullPath: '/tools/add-page-numbers'
+      preLoaderRoute: typeof ToolsAddPageNumbersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/compress-pdf': {
@@ -320,6 +340,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppAdsDottxtRoute: AppAdsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ToolsAddPageNumbersRoute: ToolsAddPageNumbersRoute,
   ToolsCompressPdfRoute: ToolsCompressPdfRoute,
   ToolsJpgToPdfRoute: ToolsJpgToPdfRoute,
   ToolsMergePdfRoute: ToolsMergePdfRoute,

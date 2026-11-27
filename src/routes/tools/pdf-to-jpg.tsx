@@ -323,7 +323,7 @@ function PdfToJpgPage() {
                 to={toolPath(related)}
                 className="inline-flex items-center gap-2 rounded-sm border border-line px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                {related.icon}
+                <related.icon className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden="true" />
                 {related.name}
               </Link>
             ))}
