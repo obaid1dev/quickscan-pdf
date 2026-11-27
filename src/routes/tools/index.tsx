@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/tools")({
+export const Route = createFileRoute("/tools/")({
   head: () => ({
     ...pageHead({
       title: "Free PDF tools — compress, merge, split, rotate, convert",
@@ -71,7 +71,7 @@ function ToolsPage() {
           {TOOLS.map((tool) => (
             <div key={tool.slug} className="rounded-lg border border-line bg-surface p-6">
               <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground mb-2">
-                {tool.icon}
+                <tool.icon className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden="true" />
                 <span>{tool.category}</span>
               </div>
               <h3 className="font-display text-[17px] font-semibold leading-tight text-foreground">
