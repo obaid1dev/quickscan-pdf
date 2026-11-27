@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { ListOrdered } from "lucide-react";
 import { getTool, TOOLS, toolPath } from "@/lib/tools";
-import { toolHead, pageHead, toolsListJsonLd, jsonLdScript } from "@/lib/seo";
+import { pageHead, toolsListJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
+import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/tools/")({
@@ -33,7 +34,7 @@ const CATEGORY_LABEL: Record<"Optimize" | "Organize" | "Convert" | "Edit", strin
 
 function ToolsPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <ToolsShell>
       <p className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
         <ListOrdered className="text-primary" />
         Tools
@@ -89,7 +90,7 @@ function ToolsPage() {
           ))}
         </div>
       </section>
-    </div>
+    </ToolsShell>
   );
 }
 

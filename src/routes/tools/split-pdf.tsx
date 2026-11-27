@@ -9,6 +9,7 @@ import { getTool, TOOLS, toolPath } from "@/lib/tools";
 import { toolHead } from "@/lib/seo";
 import { isPdfFile } from "@/lib/pdf-utils";
 import { Link } from "@tanstack/react-router";
+import { ToolsShell } from "@/components/tools-shell";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/tools/split-pdf")({
@@ -88,7 +89,7 @@ function SplitPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <ToolsShell>
       <div className="mx-auto w-full max-w-[1080px] px-5 pb-24 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
         <div className="max-w-[46rem]">
           <p className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
@@ -315,7 +316,7 @@ function SplitPage() {
           </div>
         </nav>
       </div>
-    </div>
+    </ToolsShell>
   );
 }
 

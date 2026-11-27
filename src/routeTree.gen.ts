@@ -14,7 +14,6 @@ import { Route as AppAdsDottxtRouteImport } from './routes/app-ads[.]txt'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ToolsIndexRouteImport } from './routes/tools/index'
-import { Route as ToolsLayoutRouteImport } from './routes/tools/_layout'
 import { Route as ToolsCompressPdfRouteImport } from './routes/tools/compress-pdf'
 import { Route as ToolsJpgToPdfRouteImport } from './routes/tools/jpg-to-pdf'
 import { Route as ToolsMergePdfRouteImport } from './routes/tools/merge-pdf'
@@ -48,11 +47,6 @@ const TermsRoute = TermsRouteImport.update({
 const ToolsIndexRoute = ToolsIndexRouteImport.update({
   id: '/tools/',
   path: '/tools/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ToolsLayoutRoute = ToolsLayoutRouteImport.update({
-  id: '/tools/_layout',
-  path: '/tools',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsCompressPdfRoute = ToolsCompressPdfRouteImport.update({
@@ -106,7 +100,6 @@ export interface FileRoutesByFullPath {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/tools': typeof ToolsLayoutRoute
   '/tools/compress-pdf': typeof ToolsCompressPdfRoute
   '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
   '/tools/merge-pdf': typeof ToolsMergePdfRoute
@@ -123,7 +116,6 @@ export interface FileRoutesByTo {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/tools': typeof ToolsIndexRoute
   '/tools/compress-pdf': typeof ToolsCompressPdfRoute
   '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
   '/tools/merge-pdf': typeof ToolsMergePdfRoute
@@ -133,6 +125,7 @@ export interface FileRoutesByTo {
   '/tools/rotate-pdf': typeof ToolsRotatePdfRoute
   '/tools/split-pdf': typeof ToolsSplitPdfRoute
   '/tools/watermark-pdf': typeof ToolsWatermarkPdfRoute
+  '/tools': typeof ToolsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -140,7 +133,6 @@ export interface FileRoutesById {
   '/app-ads.txt': typeof AppAdsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/tools/_layout': typeof ToolsLayoutRoute
   '/tools/compress-pdf': typeof ToolsCompressPdfRoute
   '/tools/jpg-to-pdf': typeof ToolsJpgToPdfRoute
   '/tools/merge-pdf': typeof ToolsMergePdfRoute
@@ -159,7 +151,6 @@ export interface FileRouteTypes {
     | '/app-ads.txt'
     | '/privacy'
     | '/terms'
-    | '/tools'
     | '/tools/compress-pdf'
     | '/tools/jpg-to-pdf'
     | '/tools/merge-pdf'
@@ -176,7 +167,6 @@ export interface FileRouteTypes {
     | '/app-ads.txt'
     | '/privacy'
     | '/terms'
-    | '/tools'
     | '/tools/compress-pdf'
     | '/tools/jpg-to-pdf'
     | '/tools/merge-pdf'
@@ -186,13 +176,13 @@ export interface FileRouteTypes {
     | '/tools/rotate-pdf'
     | '/tools/split-pdf'
     | '/tools/watermark-pdf'
+    | '/tools'
   id:
     | '__root__'
     | '/'
     | '/app-ads.txt'
     | '/privacy'
     | '/terms'
-    | '/tools/_layout'
     | '/tools/compress-pdf'
     | '/tools/jpg-to-pdf'
     | '/tools/merge-pdf'
@@ -210,7 +200,6 @@ export interface RootRouteChildren {
   AppAdsDottxtRoute: typeof AppAdsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
-  ToolsLayoutRoute: typeof ToolsLayoutRoute
   ToolsCompressPdfRoute: typeof ToolsCompressPdfRoute
   ToolsJpgToPdfRoute: typeof ToolsJpgToPdfRoute
   ToolsMergePdfRoute: typeof ToolsMergePdfRoute
@@ -258,13 +247,6 @@ declare module '@tanstack/react-router' {
       path: '/tools'
       fullPath: '/tools/'
       preLoaderRoute: typeof ToolsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tools/_layout': {
-      id: '/tools/_layout'
-      path: '/tools'
-      fullPath: '/tools'
-      preLoaderRoute: typeof ToolsLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/compress-pdf': {
@@ -338,7 +320,6 @@ const rootRouteChildren: RootRouteChildren = {
   AppAdsDottxtRoute: AppAdsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
-  ToolsLayoutRoute: ToolsLayoutRoute,
   ToolsCompressPdfRoute: ToolsCompressPdfRoute,
   ToolsJpgToPdfRoute: ToolsJpgToPdfRoute,
   ToolsMergePdfRoute: ToolsMergePdfRoute,

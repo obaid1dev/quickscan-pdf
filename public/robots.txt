@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://quickscanpdf.com/sitemap.xml
+Sitemap: https://quickscanpdf.xyz/sitemap.xml

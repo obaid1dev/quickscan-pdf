@@ -1,7 +1,7 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-const SITE_URL = (process.env.SITE_URL || "https://quickscanpdf.com").replace(/\/+$/, "");
+const SITE_URL = (process.env.SITE_URL || "https://quickscanpdf.xyz").replace(/\/+$/, "");
 
 const PAGES = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
