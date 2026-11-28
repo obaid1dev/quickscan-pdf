@@ -76,6 +76,7 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
+      { name: 'google-site-verification', content: '5FivENgtlzBwPw46fqlKnj0dUVOEJ14p3zZauFtqGO4' },
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "QuickScan PDF — Scan anything into a clean PDF" },
